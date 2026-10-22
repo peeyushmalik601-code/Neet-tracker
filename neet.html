@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NEET 2026 · Syllabus Tracker</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  :root{
+    --soft:#f7f8fb;
+    --line:#e8ecf3;
+    --ink:#0f172a;
+    --muted:#6b7a90;
+    --lec:#3b82f6;
+    --que:#f59e0b;
+    --rev:#10b981;
+  }
+
+  html{scroll-behavior:smooth}
+  body{
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1100px 520px at 8% -12%, #eef2ff 0%, transparent 62%),
+      radial-gradient(900px 460px at 102% -4%, #ecfdf5 0%, transparent 58%),
+      #ffffff;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+
+  /* ================= HEADER ================= */
+  header{
+    position:sticky;top:0;z-index:60;
+    background:rgba(255,255,255,.82);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--line);
+  }
+  .h-inner{
+    max-width:1080px;margin:0 auto;padding:13px 20px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .logo{
+    width:42px;height:42px;border-radius:13px;flex:0 0 auto;
+    background:linear-gradient(135deg,#6366f1,#4338ca);
+    color:#fff;font-weight:800;font-size:17px;
+    display:grid;place-items:center;
+    box-shadow:0 8px 20px -8px rgba(79,70,229,.75);
+    letter-spacing:-.5px;
+  }
+  .brand h1{font-size:16px;font-weight:750;letter-spacing:-.25px;line-height:1.2}
+  .brand p{font-size:11.5px;color:var(--muted);margin-top:2px;font-weight:500}
+
+  .ring{position:relative;width:56px;height:56px;flex:0 0 auto}
+  .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .ring circle{fill:none;stroke-width:5;stroke-linecap:round}
+  .ring .bg{stroke:#eef1f6}
+  .ring .fg{stroke:#4f46e5;stroke-dasharray:150.8;stroke-dashoffset:150.8;transition:stroke-dashoffset .45s cubic-bezier(.4,0,.2,1)}
+  .ring span{
+    position:absolute;inset:0;display:grid;place-items:center;
+    font-size:11.5px;font-weight:800;color:#4338ca;letter-spacing:-.3px;
+  }
+
+  /* ================= TOOLBAR ================= */
+  .toolbar{
+    max-width:1080px;margin:0 auto;padding:16px 20px 4px;
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  }
+  .search{
+    flex:1 1 240px;position:relative;
+  }
+  .search input{
+    width:100%;font:inherit;font-size:13.5px;
+    padding:10px 14px 10px 38px;
+    border:1.5px solid var(--line);border-radius:12px;
+    background:#fff;color:var(--ink);outline:none;
+    transition:.2s;
+  }
+  .search input::placeholder{color:#9aa8bb}
+  .search input:focus{border-color:#c7d2fe;box-shadow:0 0 0 4px rgba(99,102,241,.12)}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:#9aa8bb}
+
+  .chips{display:flex;gap:6px;background:var(--soft);padding:4px;border-radius:12px;border:1px solid var(--line)}
+  .chip{
+    font:inherit;font-size:12.5px;font-weight:650;color:var(--muted);
+    background:transparent;border:none;padding:7px 13px;border-radius:9px;cursor:pointer;
+    transition:.18s;white-space:nowrap;
+  }
+  .chip:hover{color:var(--ink)}
+  .chip.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(15,23,42,.1)}
+
+  .ghost{
+    font:inherit;font-size:12.5px;font-weight:650;color:var(--muted);
+    background:#fff;border:1.5px solid var(--line);border-radius:11px;
+    padding:9px 14px;cursor:pointer;transition:.18s;white-space:nowrap;
+  }
+  .ghost:hover{color:#dc2626;border-color:#fecaca;background:#fef2f2}
+
+  /* ================= LEGEND ================= */
+  .legend{
+    max-width:1080px;margin:0 auto;padding:12px 20px 0;
+    display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);font-weight:600;
+  }
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
+  .legend .l{background:var(--lec)}
+  .legend .q{background:var(--que)}
+  .legend .r{background:var(--rev)}
+
+  /* ================= SUBJECT ================= */
+  main{max-width:1080px;margin:0 auto;padding:0 20px}
+  .subject{margin-top:30px;--c:#4f46e5}
+  .subj-head{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:0 4px 12px;flex-wrap:wrap;
+  }
+  .subj-title{display:flex;align-items:center;gap:10px;min-width:0}
+  .subj-icon{
+    width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:17px;
+    background:color-mix(in srgb, var(--c) 10%, #fff);
+    border:1px solid color-mix(in srgb, var(--c) 20%, #fff);
+  }
+  .subj-title h2{font-size:17px;font-weight:780;letter-spacing:-.35px}
+  .subj-count{font-size:11.5px;color:var(--muted);font-weight:600;background:var(--soft);
+    padding:3px 9px;border-radius:99px;border:1px solid var(--line)}
+
+  .subj-prog{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+  .subj-prog .bar{width:120px;height:6px;border-radius:99px;background:#eef1f6;overflow:hidden}
+  .subj-prog .bar>i{display:block;height:100%;width:0;border-radius:99px;background:var(--c);
+    transition:width .4s cubic-bezier(.4,0,.2,1)}
+  .subj-prog b{font-size:12px;font-weight:750;color:var(--c);min-width:34px;text-align:right;
+    font-variant-numeric:tabular-nums}
+
+  /* ================= CHAPTER ================= */
+  .chapter{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    margin-bottom:9px;overflow:hidden;
+    transition:box-shadow .22s ease, border-color .22s ease;
+  }
+  .chapter:hover{border-color:#dbe2ec;box-shadow:0 6px 22px -14px rgba(15,23,42,.35)}
+  .chapter.open{box-shadow:0 8px 30px -18px rgba(15,23,42,.4);border-color:#dbe2ec}
+
+  .ch-head{
+    width:100%;display:flex;align-items:center;gap:12px;
+    padding:14px 16px;background:none;border:none;cursor:pointer;
+    font:inherit;text-align:left;color:inherit;
+  }
+  .chev{
+    flex:0 0 auto;width:20px;height:20px;display:grid;place-items:center;
+    transition:transform .25s cubic-bezier(.4,0,.2,1);color:#94a3b8;
+  }
+  .chapter.open .chev{transform:rotate(90deg);color:var(--c)}
+  .chev svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+  .ch-name{flex:1;font-size:13.8px;font-weight:660;letter-spacing:-.15px;min-width:0}
+  .ch-meta{font-size:11.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;
+    background:var(--soft);padding:3px 9px;border-radius:99px;border:1px solid var(--line);flex:0 0 auto}
+  .ch-meta.full{color:#047857;background:#ecfdf5;border-color:#a7f3d0}
+
+  .ch-bar{width:70px;height:5px;border-radius:99px;background:#eef1f6;overflow:hidden;flex:0 0 auto}
+  .ch-bar>i{display:block;height:100%;width:0;border-radius:99px;background:var(--c);transition:width .4s ease}
+
+  .ch-body{display:none;border-top:1px solid var(--line);padding:6px 8px 8px}
+  .chapter.open .ch-body{display:block}
+
+  /* ================= TOPIC ================= */
+  .topic{
+    display:flex;align-items:center;gap:12px;
+    padding:9px 10px;border-radius:10px;
+    transition:background .15s ease;
+  }
+  .topic:hover{background:#fafbfe}
+  .topic.hidden,.chapter.hidden{display:none}
+
+  .t-name{
+    flex:1;font-size:13.2px;line-height:1.45;color:#243044;font-weight:480;min-width:0;
+    padding-left:20px;position:relative;
+  }
+  .t-name::before{
+    content:"";position:absolute;left:4px;top:50%;transform:translateY(-50%);
+    width:7px;height:7px;border-radius:50%;border:1.6px solid #cbd5e1;
+    transition:.2s;background:#fff;
+  }
+  .topic.done .t-name::before{background:var(--rev);border-color:var(--rev);
+    box-shadow:0 0 0 3px rgba(16,185,129,.15)}
+  .topic.done .t-name{color:#0f172a;font-weight:560}
+
+  .toggles{display:flex;gap:6px;flex:0 0 auto}
+
+  .tg{
+    font:inherit;font-size:11.5px;font-weight:700;letter-spacing:.01em;
+    padding:5.5px 11px;min-width:54px;border-radius:99px;
+    border:1.5px solid var(--line);background:#fff;color:#93a1b3;
+    cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);
+    user-select:none;-webkit-tap-highlight-color:transparent;
+  }
+  .tg:hover{border-color:#cbd5e1;color:#475569;transform:translateY(-1px)}
+  .tg:active{transform:translateY(0) scale(.96)}
+  .tg.active{color:#fff;border-color:transparent}
+  .tg.active::after{content:"✓";margin-left:4px;font-size:9.5px;opacity:.9}
+  .tg-l.active{background:var(--lec);box-shadow:0 5px 14px -6px var(--lec)}
+  .tg-q.active{background:var(--que);box-shadow:0 5px 14px -6px var(--que)}
+  .tg-r.active{background:var(--rev);box-shadow:0 5px 14px -6px var(--rev)}
+
+  .ch-foot{
+    display:flex;justify-content:flex-end;padding:6px 10px 4px;
+  }
+  .reset-ch{
+    font:inherit;font-size:11.5px;font-weight:650;color:#94a3b8;
+    background:none;border:none;cursor:pointer;padding:5px 9px;border-radius:8px;transition:.18s;
+  }
+  .reset-ch:hover{color:#dc2626;background:#fef2f2}
+
+  .empty{
+    text-align:center;padding:70px 20px;color:var(--muted);
+  }
+  .empty b{display:block;font-size:15px;color:var(--ink);margin-bottom:6px}
+
+  /* ================= RESPONSIVE ================= */
+  @media (max-width:640px){
+    .h-inner{padding:11px 14px}
+    .brand h1{font-size:14px}
+    .brand p{font-size:10.5px}
+    .logo{width:38px;height:38px;font-size:15px;border-radius:11px}
+    .toolbar{padding:13px 14px 2px}
+    .legend{padding:10px 14px 0}
+    main{padding:0 14px}
+    .ch-head{padding:13px 13px;gap:9px}
+    .ch-name{font-size:13px}
+    .ch-bar{display:none}
+    .toggles{gap:4px}
+    .tg{min-width:44px;padding:5px 8px;font-size:10.8px}
+    .t-name{font-size:12.6px}
+    .topic{padding:9px 6px;gap:8px}
+    .subj-prog .bar{width:80px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-inner">
+    <div class="brand">
+      <div class="logo">N</div>
+      <div>
+        <h1>NEET 2026 Syllabus Tracker</h1>
+        <p>Physics · Chemistry · Biology — 50 chapters</p>
+      </div>
+    </div>
+    <div class="ring">
+      <svg viewBox="0 0 56 56">
+        <circle class="bg" cx="28" cy="28" r="24"></circle>
+        <circle class="fg" id="ringFg" cx="28" cy="28" r="24"></circle>
+      </svg>
+      <span id="ringPct">0%</span>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round">
+      <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path>
+    </svg>
+    <input id="search" type="text" placeholder="Topic search karo… (e.g. Thermodynamics, Optics)" />
+  </div>
+
+  <div class="chips" id="chips">
+    <button class="chip on" data-filter="all">All</button>
+    <button class="chip" data-filter="pending">Pending</button>
+    <button class="chip" data-filter="done">Done</button>
+  </div>
+
+  <button class="ghost" id="expandAll">Expand all</button>
+  <button class="ghost" id="resetAll">Reset all</button>
+</div>
+
+<div class="legend">
+  <span><i class="l"></i>Lec = Lecture dekha</span>
+  <span><i class="q"></i>Q = Questions solve kiye</span>
+  <span><i class="r"></i>Rev = Revision ho gayi</span>
+</div>
+
+<main id="app"></main>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const SUBJECTS = [
+  {
+    id: 'phy', name: 'Physics', icon: '⚛️', color: '#4f46e5',
+    chapters: [
+      { n: 'Physics and Measurement', t: ['Units of measurement','SI units','Fundamental & derived units','Least count','Significant figures','Errors in measurement','Dimensions of physical quantities','Dimensional analysis & applications'] },
+      { n: 'Kinematics', t: ['Frame of reference','Motion in a straight line','Position-time graph','Speed & velocity','Uniform & non-uniform motion','Average & instantaneous velocity','Uniformly accelerated motion','Velocity-time & position-time graphs','Scalars & vectors','Vector addition & subtraction','Scalar & vector products','Unit vector','Resolution of a vector','Relative velocity','Projectile motion','Uniform circular motion'] },
+      { n: 'Laws of Motion', t: ['Force & inertia','Newton\u2019s First Law','Momentum','Newton\u2019s Second Law','Impulse','Newton\u2019s Third Law','Conservation of linear momentum','Equilibrium of concurrent forces','Static & kinetic friction','Laws of friction','Rolling friction','Dynamics of uniform circular motion','Centripetal force','Vehicle on level road','Vehicle on banked road'] },
+      { n: 'Work, Energy and Power', t: ['Work done by constant force','Work done by variable force','Kinetic energy','Potential energy','Work-energy theorem','Power','Potential energy of spring','Conservation of mechanical energy','Conservative forces','Non-conservative forces','Motion in a vertical circle','Elastic collisions','Inelastic collisions','Collisions in one & two dimensions'] },
+      { n: 'Rotational Motion', t: ['Centre of mass (two-particle system)','Centre of mass of rigid body','Torque','Angular momentum','Conservation of angular momentum','Moment of inertia','Radius of gyration','MOI of simple geometrical objects','Parallel axis theorem','Perpendicular axis theorem','Equilibrium of rigid bodies','Equations of rotational motion'] },
+      { n: 'Gravitation', t: ['Universal law of gravitation','Acceleration due to gravity','Variation of g with altitude','Variation of g with depth','Kepler\u2019s laws','Gravitational potential energy','Gravitational potential','Escape velocity','Motion of a satellite','Orbital velocity','Time period of satellite','Energy of satellite'] },
+      { n: 'Properties of Solids and Liquids', t: ['Elastic behaviour','Stress-strain relationship','Hooke\u2019s Law','Young\u2019s modulus','Bulk modulus','Modulus of rigidity','Pressure due to fluid column','Pascal\u2019s law','Effect of gravity on fluid pressure','Viscosity','Stokes\u2019 law','Terminal velocity','Streamline & turbulent flow','Bernoulli\u2019s principle','Surface energy & surface tension','Angle of contact','Capillary rise','Heat & temperature','Thermal expansion','Specific heat capacity','Calorimetry','Change of state','Latent heat','Conduction','Convection','Radiation'] },
+      { n: 'Thermodynamics', t: ['Thermal equilibrium','Zeroth law of thermodynamics','Concept of temperature','Heat, work & internal energy','First law of thermodynamics','Isothermal process','Adiabatic process','Second law of thermodynamics','Reversible processes','Irreversible processes'] },
+      { n: 'Kinetic Theory of Gases', t: ['Equation of state of a perfect gas','Work done on compressing a gas','Kinetic theory assumptions','Concept of pressure','Kinetic interpretation of temperature','RMS speed','Degrees of freedom','Law of equipartition of energy','Specific heat capacities','Mean free path','Avogadro\u2019s number'] },
+      { n: 'Oscillations and Waves', t: ['Periodic motion','Time period & frequency','Displacement as function of time','Simple harmonic motion (SHM)','Equation of SHM','Phase','Oscillations of a spring','Energy in SHM','Simple pendulum','Wave motion','Longitudinal waves','Transverse waves','Speed of travelling wave','Progressive wave equation','Superposition principle','Reflection of waves','Standing waves in strings','Standing waves in organ pipes','Fundamental mode & harmonics','Beats'] },
+      { n: 'Electrostatics', t: ['Electric charges & conservation','Coulomb\u2019s law','Forces between multiple charges','Superposition principle','Electric field','Field due to point charge','Electric field lines','Electric dipole','Field due to dipole','Torque on dipole','Electric flux','Gauss\u2019s law','Applications of Gauss\u2019s law','Electric potential','Potential energy','Equipotential surfaces','Conductors & insulators','Dielectrics','Capacitors & capacitance','Series & parallel combination','Parallel plate capacitor','Effect of dielectric','Energy stored in capacitor'] },
+      { n: 'Current Electricity', t: ['Electric current','Drift velocity','Mobility','Ohm\u2019s law','Electrical resistance','V-I characteristics','Electrical energy','Electrical power','Resistivity & conductivity','Series combination','Parallel combination','Temperature dependence of resistance'] },
+      { n: 'Magnetic Effects of Current and Magnetism', t: ['Biot-Savart law','Ampere\u2019s law','Magnetic field due to current','Magnetic properties of materials'] },
+      { n: 'Electromagnetic Induction and Alternating Currents', t: ['Faraday\u2019s law','Lenz\u2019s law','Self inductance','Mutual inductance','Eddy currents','AC circuits','Reactance & impedance','Resonance in RLC circuits','Power in AC circuits'] },
+      { n: 'Electromagnetic Waves', t: ['Maxwell\u2019s equations overview','Wave propagation','Electromagnetic spectrum','Applications of EM waves'] },
+      { n: 'Optics', t: ['Reflection','Refraction','Lenses','Lens formula & magnification','Aberrations','Interference','Diffraction','Polarization'] },
+      { n: 'Dual Nature of Matter and Radiation', t: ['Photoelectric effect','de Broglie wavelength','Basic quantum ideas','Applications'] },
+      { n: 'Atoms and Nuclei', t: ['Atomic models','Radioactivity','Nuclear reactions','Binding energy'] },
+      { n: 'Electronic Devices', t: ['Semiconductors','p-n junction','Diodes','Transistors','Applications'] },
+      { n: 'Experimental Skills', t: ['Vernier callipers','Screw gauge','Simple pendulum experiment','Metre bridge','Ohm\u2019s law experiments','Focal length of mirror & lens','Prism experiments','Glass slab','Galvanometer','Diode characteristics'] }
+    ]
+  },
+  {
+    id: 'che', name: 'Chemistry', icon: '🧪', color: '#059669',
+    chapters: [
+      { n: 'Some Basic Concepts in Chemistry', t: ['Matter & its nature','Dalton\u2019s atomic theory','Laws of chemical combination','Atomic & molecular masses','Mole concept','Molar mass','Percentage composition','Empirical formula','Molecular formula','Chemical equations','Stoichiometry'] },
+      { n: 'Atomic Structure', t: ['Electromagnetic radiation','Photoelectric effect','Hydrogen spectrum','Bohr model & postulates','Dual nature of matter','de Broglie relation','Heisenberg uncertainty principle','Quantum mechanical model','Atomic orbitals','Quantum numbers','Shapes of s, p, d orbitals','Aufbau principle','Pauli exclusion principle','Hund\u2019s rule','Electronic configuration'] },
+      { n: 'Chemical Bonding and Molecular Structure', t: ['Kossel-Lewis approach','Ionic bonding','Lattice enthalpy','Covalent bonding','Electronegativity','Fajan\u2019s rule','Dipole moment','VSEPR theory','Valence bond theory','Hybridization','Resonance','Molecular orbital theory','Bond order','Metallic bonding','Hydrogen bonding'] },
+      { n: 'Chemical Thermodynamics', t: ['System & surroundings','Extensive & intensive properties','State functions','Types of processes','First law of thermodynamics','Work','Heat','Internal energy','Enthalpy','Heat capacity','Hess\u2019s law','Enthalpies of reactions','Second law of thermodynamics','Spontaneity','Entropy','Gibbs free energy','Equilibrium constant'] },
+      { n: 'Solutions', t: ['Concentration terms','Molality','Molarity','Mole fraction','Percentage composition','Raoult\u2019s Law','Vapour pressure of solutions','Colligative properties'] },
+      { n: 'Equilibrium', t: ['Dynamic equilibrium','Physical equilibrium','Chemical equilibrium','Law of mass action','Kp & Kc','Le Chatelier\u2019s principle','Ionic equilibrium','Arrhenius acids & bases','Bronsted-Lowry concept','Lewis acids & bases','pH scale','Common ion effect','Hydrolysis of salts','Solubility product','Buffer solutions'] },
+      { n: 'Redox Reactions and Electrochemistry', t: ['Oxidation & reduction','Oxidation number','Redox reactions','Electrochemical cells','Nernst equation','Faraday\u2019s laws','Conductance'] },
+      { n: 'Chemical Kinetics', t: ['Rate of reaction','Rate law','Order of reaction','Molecularity','Activation energy','Arrhenius equation'] },
+      { n: 'Classification of Elements and Periodicity', t: ['Modern periodic law','Present form of periodic table','s, p, d, f blocks','Atomic & ionic radii','Ionization enthalpy','Electron gain enthalpy','Valence','Oxidation states','Chemical reactivity'] },
+      { n: 'p-Block Elements', t: ['Group 13 elements','Group 14 elements','Group 15 elements','Group 16 elements','Group 17 elements','Group 18 elements','Periodic trends','Anomalous behaviour','Important compounds','Industrial applications'] },
+      { n: 'd- and f-Block Elements', t: ['Properties of d-block elements','Properties of f-block elements','Potassium dichromate','Potassium permanganate'] },
+      { n: 'Coordination Compounds', t: ['IUPAC naming','Isomerism','Werner\u2019s theory','Bonding in coordination compounds'] },
+      { n: 'Purification and Characterisation of Organic Compounds', t: ['Methods of purification','Qualitative analysis','Quantitative analysis'] },
+      { n: 'Some Basic Principles of Organic Chemistry', t: ['Tetravalency of carbon','Hybridization','Classification of organic compounds','Homologous series','Structural isomerism','Stereoisomerism','IUPAC nomenclature','Homolytic fission','Heterolytic fission','Free radicals','Carbocations','Carbanions','Electrophiles','Nucleophiles','Inductive effect','Electromeric effect','Resonance','Hyperconjugation','Substitution reactions','Addition reactions','Elimination reactions','Rearrangement reactions'] },
+      { n: 'Hydrocarbons', t: ['Classification','Isomerism','IUPAC nomenclature','Preparation of alkanes','Reactions of alkanes','Conformations','Halogenation','Alkenes','Geometrical isomerism','Electrophilic addition','Markownikoff\u2019s rule','Peroxide effect','Ozonolysis','Polymerization','Alkynes','Acidic character of alkynes','Benzene structure','Aromaticity','Electrophilic substitution','Friedel-Crafts alkylation','Friedel-Crafts acylation','Directive influence'] },
+      { n: 'Organic Compounds Containing Halogens', t: ['Haloalkanes','Haloarenes','SN1 mechanism','SN2 mechanism'] },
+      { n: 'Organic Compounds Containing Oxygen', t: ['Alcohols','Phenols','Ethers','Reimer-Tiemann reaction','Aldehydes','Ketones','Carboxylic acids','Aldol condensation','Cannizzaro reaction'] },
+      { n: 'Organic Compounds Containing Nitrogen', t: ['Amines','Diazonium salts','Reactions of diazonium salts'] },
+      { n: 'Biomolecules', t: ['Carbohydrates','Linkages in carbohydrates','Proteins','Enzymes','Vitamins','Nucleic acids'] },
+      { n: 'Principles Related to Practical Chemistry', t: ['Detection of functional groups','Titration','Salt analysis','Chromatography'] }
+    ]
+  },
+  {
+    id: 'bio', name: 'Biology', icon: '🧬', color: '#e11d48',
+    chapters: [
+      { n: 'Diversity in the Living World', t: ['What is living','Biodiversity','Need for classification','Taxonomy & systematics','Species concept','Taxonomical hierarchy','Binomial nomenclature','Five kingdom classification','Monera','Protista','Fungi','Lichens','Viruses & viroids','Algae','Bryophytes','Pteridophytes','Gymnosperms','Non-chordates','Chordates'] },
+      { n: 'Structural Organisation in Animals and Plants', t: ['Morphology & modifications','Tissues','Anatomy of root','Anatomy of stem','Anatomy of leaf','Inflorescence','Flower','Fruit','Seed','Malvaceae','Cruciferae','Leguminosae','Compositae','Graminae','Animal tissues','Digestive system of insects','Circulatory system of insects','Morphology of frog','Anatomy of frog'] },
+      { n: 'Cell Structure and Function', t: ['Cell theory','Prokaryotic cell','Eukaryotic cell','Cell envelope','Cell membrane','Cell wall','Endoplasmic reticulum','Golgi bodies','Lysosomes','Mitochondria','Ribosomes','Plastids','Cytoskeleton','Cilia & flagella','Centrioles','Nucleus','Proteins','Carbohydrates','Lipids','Nucleic acids','Enzymes','Enzyme action','Cell cycle','Mitosis','Meiosis'] },
+      { n: 'Plant Physiology', t: ['Photosynthesis','Light reaction','Dark reaction','C3 pathway','C4 pathway','Factors affecting photosynthesis','Glycolysis','TCA cycle','Electron transport system','ATP generation','Seed germination','Growth phases','Differentiation','Plant growth regulators'] },
+      { n: 'Human Physiology', t: ['Breathing & respiration','Body fluids & circulation','Excretory products','Elimination','Locomotion & movement','Neural control','Coordination','Chemical coordination','Regulation'] },
+      { n: 'Reproduction', t: ['Sexual reproduction in flowering plants','Human reproduction','Reproductive health'] },
+      { n: 'Genetics and Evolution', t: ['Heredity','Variation','Mendelian inheritance','Deviations from Mendelism','Sex determination','Genetic disorders','DNA structure','DNA replication','Gene expression','Genome project','Origin of life','Mechanisms of evolution','Natural selection','Human evolution'] },
+      { n: 'Biology and Human Welfare', t: ['Health & disease','Pathogens','Human diseases','HIV/AIDS','Drug abuse','Microbes in food processing','Industrial production','Sewage treatment','Energy generation','Biocontrol agents'] },
+      { n: 'Biotechnology and Its Applications', t: ['Genetic engineering','Principles of biotechnology','Process of biotechnology','Applications in health','Insulin production','Vaccines','Gene therapy','Bt crops','Transgenic animals','Biosafety issues','Biopiracy & patents'] },
+      { n: 'Ecology and Environment', t: ['Organisms & environment','Population interactions','Population growth','Birth rate & death rate','Age distribution','Ecosystem patterns','Ecosystem components','Energy flow','Ecological pyramids','Biodiversity concept','Biodiversity patterns','Loss of biodiversity','Conservation methods','Endangered species','Biodiversity hotspots'] }
+    ]
+  }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const LS_KEY = 'neet_tracker_v2';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch (e) { state = {}; }
+
+const save = () => { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){} };
+const kOf = (si, ci, ti) => si + '-' + ci + '-' + ti;
+const getSt = (k) => state[k] || { l: 0, q: 0, r: 0 };
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const app = document.getElementById('app');
+
+function buildTopic(si, ci, ti, name) {
+  const k = kOf(si, ci, ti);
+  const st = getSt(k);
+  const esc = name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  const isDone = st.l && st.q && st.r;
+  return `<div class="topic ${isDone ? 'done' : ''}" data-key="${k}" data-name="${esc.toLowerCase()}">
+      <span class="t-name">${name}</span>
+      <div class="toggles">
+        <button class="tg tg-l ${st.l ? 'active' : ''}" data-key="${k}" data-f="l">Lec</button>
+        <button class="tg tg-q ${st.q ? 'active' : ''}" data-key="${k}" data-f="q">Q</button>
+        <button class="tg tg-r ${st.r ? 'active' : ''}" data-key="${k}" data-f="r">Rev</button>
+      </div>
+    </div>`;
+}
+
+function buildChapter(si, ci, ch) {
+  const id = si + '-' + ci;
+  const topics = ch.t.map((t, ti) => buildTopic(si, ci, ti, t)).join('');
+  return `<article class="chapter" data-chap="${id}" data-si="${si}" data-ci="${ci}">
+      <button class="ch-head">
+        <span class="chev"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+        <span class="ch-name">${ci + 1}. ${ch.n}</span>
+        <span class="ch-meta" id="meta-${id}">0/${ch.t.length * 3}</span>
+        <span class="ch-bar"><i id="bar-${id}"></i></span>
+      </button>
+      <div class="ch-body">
+        ${topics}
+        <div class="ch-foot"><button class="reset-ch" data-chap="${id}">Reset this chapter</button></div>
+      </div>
+    </article>`;
+}
+
+function buildSubject(s, si) {
+  return `<section class="subject" style="--c:${s.color}" data-subj="${s.id}" data-si="${si}">
+      <div class="subj-head">
+        <div class="subj-title">
+          <span class="subj-icon">${s.icon}</span>
+          <h2>${s.name}</h2>
+          <span class="subj-count">${s.chapters.length} chapters</span>
+        </div>
+        <div class="subj-prog">
+          <div class="bar"><i id="sbar-${s.id}"></i></div>
+          <b id="spct-${s.id}">0%</b>
+        </div>
+      </div>
+      <div class="chapters">${s.chapters.map((c, ci) => buildChapter(si, ci, c)).join('')}</div>
+    </section>`;
+}
+
+app.innerHTML = SUBJECTS.map(buildSubject).join('');
+
+/* ============================================================
+   PROGRESS CALCULATION
+   ============================================================ */
+const CIRC = 150.8;
+
+function chapterStats(si, ci) {
+  const ch = SUBJECTS[si].chapters[ci];
+  const total = ch.t.length * 3;
+  let done = 0;
+  ch.t.forEach((_, ti) => {
+    const st = getSt(kOf(si, ci, ti));
+    if (st.l) done++;
+    if (st.q) done++;
+    if (st.r) done++;
+  });
+  return { done, total };
+}
+
+function updateChapter(si, ci) {
+  const id = si + '-' + ci;
+  const { done, total } = chapterStats(si, ci);
+  const pct = total ? (done / total) * 100 : 0;
+  const bar = document.getElementById('bar-' + id);
+  const meta = document.getElementById('meta-' + id);
+  if (bar) bar.style.width = pct + '%';
+  if (meta) {
+    meta.textContent = done + '/' + total;
+    meta.classList.toggle('full', done === total && total > 0);
+  }
+}
+
+function updateSubject(si) {
+  const s = SUBJECTS[si];
+  let done = 0, total = 0;
+  s.chapters.forEach((c, ci) => {
+    const st = chapterStats(si, ci);
+    done += st.done; total += st.total;
+  });
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  const bar = document.getElementById('sbar-' + s.id);
+  const pctEl = document.getElementById('spct-' + s.id);
+  if (bar) bar.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+  return { done, total };
+}
+
+function updateOverall() {
+  let done = 0, total = 0;
+  SUBJECTS.forEach((s, si) => {
+    const r = updateSubject(si);
+    done += r.done; total += r.total;
+  });
+  const pct = total ? done / total : 0;
+  document.getElementById('ringFg').style.strokeDashoffset = CIRC * (1 - pct);
+  document.getElementById('ringPct').textContent = Math.round(pct * 100) + '%';
+}
+
+function refreshAll() { updateOverall(); }
+
+/* ============================================================
+   TOGGLE LOGIC
+   ============================================================ */
+function toggle(key, field) {
+  const st = getSt(key);
+  st[field] = st[field] ? 0 : 1;
+  if (!st.l && !st.q && !st.r) delete state[key];
+  else state[key] = st;
+  save();
+
+  // update buttons
+  document.querySelectorAll('.tg[data-key="' + key + '"]').forEach(btn => {
+    const f = btn.dataset.f;
+    const s2 = getSt(key);
+    btn.classList.toggle('active', !!s2[f]);
+  });
+
+  // update topic dot
+  const row = document.querySelector('.topic[data-key="' + key + '"]');
+  if (row) {
+    const s3 = getSt(key);
+    row.classList.toggle('done', !!(s3.l && s3.q && s3.r));
+  }
+
+  // update chapter + subject + overall
+  const [si, ci] = key.split('-').map(Number);
+  updateChapter(si, ci);
+  updateOverall();
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+app.addEventListener('click', (e) => {
+  const tg = e.target.closest('.tg');
+  if (tg) { toggle(tg.dataset.key, tg.dataset.f); return; }
+
+  const resetBtn = e.target.closest('.reset-ch');
+  if (resetBtn) {
+    const [si, ci] = resetBtn.dataset.chap.split('-').map(Number);
+    const ch = SUBJECTS[si].chapters[ci];
+    if (!confirm('Reset "' + ch.n + '" ka poora progress?')) return;
+    ch.t.forEach((_, ti) => delete state[kOf(si, ci, ti)]);
+    save();
+    document.querySelectorAll('.chapter[data-chap="' + resetBtn.dataset.chap + '"] .topic').forEach(row => {
+      row.classList.remove('done');
+      row.querySelectorAll('.tg').forEach(b => b.classList.remove('active'));
+    });
+    updateChapter(si, ci);
+    updateOverall();
+    return;
+  }
+
+  const head = e.target.closest('.ch-head');
+  if (head) { head.parentElement.classList.toggle('open'); return; }
+});
+
+/* ============================================================
+   FILTERS & SEARCH
+   ============================================================ */
+let currentFilter = 'all';
+const searchInput = document.getElementById('search');
+const chips = document.getElementById('chips');
+
+chips.addEventListener('click', (e) => {
+  const c = e.target.closest('.chip');
+  if (!c) return;
+  chips.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+  c.classList.add('on');
+  currentFilter = c.dataset.filter;
+  applyFilters();
+});
+
+searchInput.addEventListener('input', applyFilters);
+
+function applyFilters() {
+  const q = searchInput.value.trim().toLowerCase();
+  let anyVisible = false;
+
+  document.querySelectorAll('.chapter').forEach(ch => {
+    let visible = 0;
+    ch.querySelectorAll('.topic').forEach(tp => {
+      const name = tp.dataset.name;
+      const key = tp.dataset.key;
+      const st = getSt(key);
+      const done = !!(st.l && st.q && st.r);
+
+      let ok = !q || name.includes(q);
+      if (currentFilter === 'pending') ok = ok && !done;
+      if (currentFilter === 'done') ok = ok && done;
+
+      tp.classList.toggle('hidden', !ok);
+      if (ok) visible++;
+    });
+
+    const showChapter = visible > 0;
+    ch.classList.toggle('hidden', !showChapter);
+    if (showChapter) anyVisible = true;
+
+    if (q && visible > 0) ch.classList.add('open');
+  });
+
+  document.querySelectorAll('.subject').forEach(sec => {
+    const has = [...sec.querySelectorAll('.chapter')].some(c => !c.classList.contains('hidden'));
+    sec.style.display = has ? '' : 'none';
+  });
+}
+
+/* ============================================================
+   EXPAND / RESET ALL
+   ============================================================ */
+const expandBtn = document.getElementById('expandAll');
+let allOpen = false;
+expandBtn.addEventListener('click', () => {
+  allOpen = !allOpen;
+  document.querySelectorAll('.chapter').forEach(c => c.classList.toggle('open', allOpen));
+  expandBtn.textContent = allOpen ? 'Collapse all' : 'Expand all';
+});
+
+document.getElementById('resetAll').addEventListener('click', () => {
+  if (!confirm('Poora data delete ho jayega. Pakka reset karna hai?')) return;
+  state = {};
+  save();
+  document.querySelectorAll('.topic').forEach(r => {
+    r.classList.remove('done');
+    r.querySelectorAll('.tg').forEach(b => b.classList.remove('active'));
+  });
+  SUBJECTS.forEach((s, si) => s.chapters.forEach((_, ci) => updateChapter(si, ci)));
+  updateOverall();
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+refreshAll();
+applyFilters();
+</script>
+</body>
+</html>
